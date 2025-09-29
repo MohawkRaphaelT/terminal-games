@@ -25,6 +25,17 @@ namespace vs_launch_external_terminal
         public readonly int StartY => y;
         public readonly int EndY => y + h;
 
+        public Rectangle()
+        {
+        }
+        public Rectangle(int x, int y, int w, int h)
+        {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+
         public static Rectangle FromCorners(int x1, int y1, int x2, int y2)
         {
             // Lower bounds for X1
@@ -218,10 +229,10 @@ namespace vs_launch_external_terminal
         /// <param name="area"></param>
         public void SetRectangle(string value, Rectangle area)
         {
-            int minX = int.Max(area.x, 0);
-            int minY = int.Max(area.y, 0);
-            int maxX = int.Min(area.x, Width);
-            int maxY = int.Min(area.y, Height);
+            int minX = int.Max(area.StartX, 0);
+            int minY = int.Max(area.StartY, 0);
+            int maxX = int.Min(area.EndX, Width);
+            int maxY = int.Min(area.EndY, Height);
             for (int y = minY; y < maxY; y++)
             {
                 for (int x = minX; x < maxX; x++)
@@ -230,6 +241,8 @@ namespace vs_launch_external_terminal
                 }
             }
         }
+
+        public void SetRectangle(string value, int x, int y, int w, int h) => SetRectangle(value, new Rectangle(x, y, w, h));
 
         public void SetCircle(string value, int cx, int cy, float r)
         {
@@ -361,7 +374,7 @@ namespace vs_launch_external_terminal
 
         public void Display()
         {
-            Console.Clear();
+            //Console.Clear();
             string display = this.ToString();
             // Reset cursor position
             Console.SetCursorPosition(0, 0);
@@ -377,6 +390,7 @@ namespace vs_launch_external_terminal
         //const string temp_mode = "fps";
         const string temp_mode = "loop";
         const TerminalMode mode = TerminalMode.Standard;
+        const ProcessWindowStyle Window = ProcessWindowStyle.Maximized;
 
         static void Main(string[] args)
         {
@@ -401,7 +415,7 @@ namespace vs_launch_external_terminal
                 process.StartInfo.FileName = @"C:\Users\Raphael\AppData\Local\Microsoft\WindowsApps\wt.exe";
                 //process.StartInfo.FileName = @"C:\Windows\system32\cmd.exe";
                 process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                process.StartInfo.WindowStyle = Window;
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardInput = true;
                 process.StartInfo.RedirectStandardOutput = true;
@@ -478,6 +492,8 @@ namespace vs_launch_external_terminal
             //{
             //}
 
+            // Delay because... Windows terminal sucks
+            Thread.Sleep(100);
             Loop();
         }
         private static void Loop()
@@ -501,7 +517,8 @@ namespace vs_launch_external_terminal
             while (true)
             {
                 fb.Reset();
-                fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, ++i);
+                //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, ++i);
+                fb.SetRectangle("😂", 0, 0, i/2, i++);
                 fb.Display();
                 Console.ReadLine();
             }
