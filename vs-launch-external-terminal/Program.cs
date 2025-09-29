@@ -29,14 +29,9 @@ namespace vs_launch_external_terminal
                 //process.StartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
                 process.StartInfo.FileName = @"C:\Users\Raphael\AppData\Local\Microsoft\WindowsApps\wt.exe";
                 //process.StartInfo.FileName = @"C:\Windows\system32\cmd.exe";
-                process.StartInfo.Arguments = $"\"{path}\" \"hi\"";
+                process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 // Open in new window
-                bool isFirstBoot = args.Length == 0;
-                process.StartInfo.UseShellExecute = isFirstBoot;
-                process.StartInfo.RedirectStandardOutput = !isFirstBoot;
-                process.StartInfo.RedirectStandardInput = !isFirstBoot;
-
                 process.Start();
                 process.WaitForExit();
             }
