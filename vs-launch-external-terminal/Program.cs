@@ -387,10 +387,11 @@ namespace vs_launch_external_terminal
     internal class Program
     {
         static int i = 0;
-        //const string temp_mode = "fps";
-        const string temp_mode = "loop";
+        static bool runNatively = false;
         const TerminalMode mode = TerminalMode.Standard;
         const ProcessWindowStyle Window = ProcessWindowStyle.Maximized;
+        const int charsWidth = 32;
+        const int charsHeight = 32;
 
         static void Main(string[] args)
         {
@@ -400,7 +401,7 @@ namespace vs_launch_external_terminal
             Console.WriteLine("❤️😭✨✅\U0001f979🔥⭐😂❤️‍\U0001fa79");
 
             // BOOTSRAP into another terminal
-            if (args.Length == 0)
+            if (args.Length == 0 && !runNatively)
             {
                 // test
                 //Console.SetWindowPosition(0, 0);
@@ -413,6 +414,7 @@ namespace vs_launch_external_terminal
                 // Config
                 //process.StartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
                 process.StartInfo.FileName = @"C:\Users\Raphael\AppData\Local\Microsoft\WindowsApps\wt.exe";
+                //process.StartInfo.FileName = @"C:\Windows\system32\cmd.exe";
                 //process.StartInfo.FileName = @"C:\Windows\system32\cmd.exe";
                 process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
                 process.StartInfo.WindowStyle = Window;
@@ -501,9 +503,9 @@ namespace vs_launch_external_terminal
             //Console.SetWindowPosition(0, 0);
             //Console.SetWindowSize(100, 100);
 
-            //Console.SetWindowSize(16, 16);
-            int width = Console.WindowWidth / 2; // because emoji are double width
-            int height = Console.WindowHeight - 1; // leave 1 line for typing
+            Console.SetWindowSize(charsWidth, charsHeight);
+            int width = Console.WindowWidth;// / 2; // because emoji are double width
+            int height = Console.WindowHeight;// - 1; // leave 1 line for typing
 
             TerminalFrameBuffer fb = new(width, height, "❤ "); // red heart is half width for whatever reason
             fb.SetCharCol("💚", 4); // green
@@ -521,6 +523,9 @@ namespace vs_launch_external_terminal
                 fb.SetRectangle("😂", 0, 0, i/2, i++);
                 fb.Display();
                 Console.ReadLine();
+                //Console.Clear();
+                // Clear the scrollback
+                Console.WriteLine("\x1b[3J");
             }
         }
 
