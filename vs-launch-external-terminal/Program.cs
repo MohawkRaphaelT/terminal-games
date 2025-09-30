@@ -112,12 +112,42 @@ namespace vs_launch_external_terminal
         }
     }
 
+    public struct TerminalText
+    {
+        public ConsoleColor fgColor;
+        public ConsoleColor bgColor;
+        public string text;
+
+        public TerminalText(string text = "  ") : this(text, ConsoleColor.White, ConsoleColor.Black)
+        {
+        }
+
+        public TerminalText(string text, ConsoleColor fgColor, ConsoleColor bgColor)
+        {
+            this.text = text;
+            this.fgColor = fgColor;
+            this.bgColor = bgColor;
+        }
+
+        public static implicit operator string(TerminalText terminalText)
+        {
+            return terminalText.text;
+        }
+
+        public static implicit operator TerminalText(string stringValue)
+        {
+            return new TerminalText(stringValue);
+        }
+    }
+
     public sealed class TerminalFrameBuffer
     {
-        private readonly string[,] BackingArray;
+        public const string DefaultText = "  ";
+
+        private readonly TerminalText[,] BackingArray;
         private readonly StringBuilder stringBuilder = new();
 
-        public string this[int x, int y]
+        public TerminalText this[int x, int y]
         {
             get => BackingArray[x, y];
             set => BackingArray[x, y] = value;
@@ -125,31 +155,36 @@ namespace vs_launch_external_terminal
 
         public int Width { get; init; }
         public int Height { get; init; }
-        public string DefaultChar { get; set; }
+        public TerminalText DefaultValue { get; set; }
 
 
-        public TerminalFrameBuffer(string defaultChar = " ") : this(Console.WindowWidth, Console.WindowHeight, defaultChar)
+        public TerminalFrameBuffer(TerminalText defaultValue) : this(Console.WindowWidth, Console.WindowHeight, defaultValue)
         {
         }
-        public TerminalFrameBuffer(int widthInChars, int heightInChars, string defaultChar = " ")
+
+        public TerminalFrameBuffer(int widthInChars, int heightInChars) : this(Console.WindowWidth, Console.WindowHeight, new TerminalText(DefaultText))
+        {
+        }
+
+        public TerminalFrameBuffer(int widthInChars, int heightInChars, TerminalText defaultValue)
         {
             Width = widthInChars;
             Height = heightInChars;
-            BackingArray = new string[widthInChars, heightInChars];
-            DefaultChar = defaultChar;
-            SetCharAll(defaultChar);
+            BackingArray = new TerminalText[widthInChars, heightInChars];
+            DefaultValue = defaultValue;
+            SetAll(defaultValue);
         }
 
         public void Reset()
         {
-            SetCharAll(DefaultChar);
+            SetAll(DefaultValue);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="value"></param>
-        public void SetCharAll(string value)
+        public void SetAll(TerminalText value)
         {
             for (int y = 0; y < Height; y++)
             {
@@ -165,7 +200,7 @@ namespace vs_launch_external_terminal
         /// </summary>
         /// <param name="value"></param>
         /// <param name="row"></param>
-        public void SetCharRow(string value, int row)
+        public void SetRow(TerminalText value, int row)
         {
             // Ignore malformed request
             if (row < 0 || row >= Height)
@@ -196,7 +231,7 @@ namespace vs_launch_external_terminal
         /// </summary>
         /// <param name="value"></param>
         /// <param name="col"></param>
-        public void SetCharCol(string value, int col)
+        public void SetCol(TerminalText value, int col)
         {
             // Ignore malformed request
             if (col < 0 || col >= Width)
@@ -227,7 +262,7 @@ namespace vs_launch_external_terminal
         /// </summary>
         /// <param name="value"></param>
         /// <param name="area"></param>
-        public void SetRectangle(string value, Rectangle area)
+        public void SetRectangle(TerminalText value, Rectangle area)
         {
             int minX = int.Max(area.StartX, 0);
             int minY = int.Max(area.StartY, 0);
@@ -242,9 +277,9 @@ namespace vs_launch_external_terminal
             }
         }
 
-        public void SetRectangle(string value, int x, int y, int w, int h) => SetRectangle(value, new Rectangle(x, y, w, h));
+        public void SetRectangle(TerminalText value, int x, int y, int w, int h) => SetRectangle(value, new Rectangle(x, y, w, h));
 
-        public void SetCircle(string value, int cx, int cy, float r)
+        public void SetCircle(TerminalText value, int cx, int cy, float r)
         {
             int minX = int.Max((int)Math.Floor(cx - r), 0);
             int minY = int.Max((int)Math.Floor(cy - r), 0);
@@ -294,7 +329,7 @@ namespace vs_launch_external_terminal
                 throw new ArgumentOutOfRangeException(msg);
             }
 
-            TerminalFrameBuffer copy = new(area.w, area.h);
+            TerminalFrameBuffer copy = new TerminalFrameBuffer(area.w, area.h);
             for (int y = 0; y < area.y; y++)
             {
                 int srcY = y + area.StartY;
@@ -372,13 +407,36 @@ namespace vs_launch_external_terminal
             return result;
         }
 
-        public void Display()
+        public void WriteToConsole()
         {
-            //Console.Clear();
-            string display = this.ToString();
-            // Reset cursor position
-            Console.SetCursorPosition(0, 0);
-            Console.Write(display);
+            ////Console.Clear();
+            //string display = this.ToString();
+            //// Reset cursor position
+            //Console.SetCursorPosition(0, 0);
+            //Console.Write(display);
+
+            // Store
+            var bg = Console.BackgroundColor;
+            var fg = Console.BackgroundColor;
+            // Write
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    TerminalText value = BackingArray[x, y];
+                    if (Console.BackgroundColor != value.bgColor)
+                        Console.BackgroundColor = value.bgColor;
+                    if (Console.ForegroundColor != value.fgColor)
+                        Console.ForegroundColor = value.fgColor;
+                    Console.Write(value.text);
+                }
+                Console.WriteLine();
+            }
+            // Restore
+            if (Console.BackgroundColor != bg)
+                Console.BackgroundColor = bg;
+            if (Console.ForegroundColor != fg)
+                Console.ForegroundColor = fg;
         }
     }
 
@@ -508,8 +566,8 @@ namespace vs_launch_external_terminal
             int height = Console.WindowHeight;// - 1; // leave 1 line for typing
 
             TerminalFrameBuffer fb = new(width, height, "❤ "); // red heart is half width for whatever reason
-            fb.SetCharCol("💚", 4); // green
-            fb.SetCharRow("💛", 4); // yellow
+            fb.SetCol("💚", 4); // green
+            fb.SetRow("💛", 4); // yellow
             fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, 1); // 
             fb.SetCircle("😂", -3, -3, 16); // 
             //fb.SetCharRow(" ", Console.WindowHeight - 1); // clear bottom line for typing
@@ -520,8 +578,8 @@ namespace vs_launch_external_terminal
             {
                 fb.Reset();
                 //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, ++i);
-                fb.SetRectangle("😂", 0, 0, i/2, i++);
-                fb.Display();
+                fb.SetRectangle("😂", 0, 0, i / 2, i++);
+                fb.WriteToConsole();
                 Console.ReadLine();
                 //Console.Clear();
                 // Clear the scrollback
