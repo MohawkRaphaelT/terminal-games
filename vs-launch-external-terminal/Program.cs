@@ -11,8 +11,8 @@ internal class Program
     static bool runNatively = false;
     const TerminalMode mode = TerminalMode.Standard;
     const ProcessWindowStyle WindowStyle = ProcessWindowStyle.Maximized;
-    const int charsWidth = 32;
-    const int charsHeight = 32;
+    const int charsWidth = 128 / 4;
+    const int charsHeight = 64 / 2;
 
     static void Main(string[] args)
     {
@@ -108,7 +108,7 @@ internal class Program
         //}
 
         // Delay because... Windows terminal sucks
-        Thread.Sleep(100);
+        Thread.Sleep(1000);
         Loop();
     }
     private static void Loop()
@@ -121,25 +121,36 @@ internal class Program
         int height = Console.WindowHeight;// - 1; // leave 1 line for typing
 
         TerminalFrameBuffer fb = new(width, height, "❤ "); // red heart is half width for whatever reason
-        fb.SetCharCol("💚", 4); // green
-        fb.SetCharRow("💛", 4); // yellow
-        fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, 1); // 
-        fb.SetCircle("😂", -3, -3, 16); // 
-        //fb.SetCharRow(" ", Console.WindowHeight - 1); // clear bottom line for typing
-        Console.Clear();
+        //fb.SetCharCol("💚", 4); // green
+        //fb.SetCharRow("💛", 4); // yellow
+        //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, 1); // 
+        //fb.SetCircle("😂", -3, -3, 16); // 
+        ////fb.SetCharRow(" ", Console.WindowHeight - 1); // clear bottom line for typing
+        //Console.Clear();
 
+        Console.CursorVisible = false;
+        string a = "😂";
+        string b = "❤ ";
+        bool state = true;
         int i = 0;
         while (true)
         {
-            fb.Reset();
+            //fb.Reset();
             //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, ++i);
-            fb.SetRectangle("😂", 0, 0, i/2, i++);
+            //fb.SetRectangle("😂", 0, 0, i/2, i++);
+            fb[i % width, i / width] = state ? a : b;
+            Console.SetCursorPosition(0, 0);
             fb.Display();
-            Console.ReadLine();
+            i++;
+            if (i == width * height)
+            {
+                i = 0;
+                state = !state;
+            }
+            //Console.ReadLine();
             //Console.Clear();
             // Clear the scrollback
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine("\x1b[3J");
+            //Console.WriteLine("\x1b[3J");
         }
     }
 
