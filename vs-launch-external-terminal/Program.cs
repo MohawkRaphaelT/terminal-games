@@ -11,8 +11,8 @@ internal class Program
     static bool runNatively = false;
     const TerminalMode mode = TerminalMode.Standard;
     const ProcessWindowStyle WindowStyle = ProcessWindowStyle.Maximized;
-    const int charsWidth = 128 / 4;
-    const int charsHeight = 64 / 2;
+    const int charsWidth = 128 / 1;
+    const int charsHeight = 64 / 1;
 
     static void Main(string[] args)
     {
@@ -116,11 +116,11 @@ internal class Program
         //Console.SetWindowPosition(0, 0);
         //Console.SetWindowSize(100, 100);
 
-        Console.SetWindowSize(charsWidth, charsHeight);
-        int width = Console.WindowWidth;// / 2; // because emoji are double width
-        int height = Console.WindowHeight;// - 1; // leave 1 line for typing
+        //Console.SetWindowSize(charsWidth, charsHeight);
+        //int width = Console.WindowWidth;// / 2; // because emoji are double width
+        //int height = Console.WindowHeight;// - 1; // leave 1 line for typing
 
-        TerminalFrameBuffer fb = new(width, height, "❤ "); // red heart is half width for whatever reason
+        //TerminalFrameBuffer fb = new(width, height, "❤ "); // red heart is half width for whatever reason
         //fb.SetCharCol("💚", 4); // green
         //fb.SetCharRow("💛", 4); // yellow
         //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, 1); // 
@@ -128,19 +128,28 @@ internal class Program
         ////fb.SetCharRow(" ", Console.WindowHeight - 1); // clear bottom line for typing
         //Console.Clear();
 
+        Console.SetWindowSize(charsWidth*2, charsHeight);
+        TerminalFrameBuffer fb = new(charsWidth, charsHeight, "❤ "); // red heart is half width for whatever reason
         Console.CursorVisible = false;
         string a = "😂";
         string b = "❤ ";
         bool state = true;
         int i = 0;
+        fb.Display();
+        int width = charsWidth;
+        int height = charsHeight;
         while (true)
         {
             //fb.Reset();
             //fb.SetCircle("😂", fb.Width / 2, fb.Height / 2, ++i);
             //fb.SetRectangle("😂", 0, 0, i/2, i++);
-            fb[i % width, i / width] = state ? a : b;
-            Console.SetCursorPosition(0, 0);
-            fb.Display();
+            //fb[i % width, i / width] = state ? a : b;
+
+            int x = i % width; // double width emoji
+            int y = i / width;
+            Console.SetCursorPosition(x*2, y);
+            Console.Write(state ? a : b);
+
             i++;
             if (i == width * height)
             {
