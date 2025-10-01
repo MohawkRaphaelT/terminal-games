@@ -50,6 +50,9 @@ internal class Program
                     ModeInput();
                     break;
 
+                case TerminalMode.TimedInterval:
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }
