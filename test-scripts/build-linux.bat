@@ -1,5 +1,7 @@
 echo on
 
+pushd
+
 :: Delete old builds folder and contents
 :: /s	Deletes a directory tree (the specified directory and all its subdirectories, including all files).
 :: /q	Specifies quiet mode. Does not prompt for confirmation when deleting a directory tree.
@@ -7,8 +9,7 @@ echo on
 rmdir /s /q builds
 
 :: Move to project folder
-pushd .
-cd vs-launch-external-terminal
+cd ../vs-launch-external-terminal
 
 :: Build all targets
 dotnet publish -r linux-x64 -o ../builds/linux-x64
