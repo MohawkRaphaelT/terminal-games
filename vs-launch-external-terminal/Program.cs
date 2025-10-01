@@ -10,7 +10,7 @@ internal class Program
     static int i = 0;
     static bool runNatively = false;
     const TerminalMode mode = TerminalMode.Standard;
-    const ProcessWindowStyle Window = ProcessWindowStyle.Maximized;
+    const ProcessWindowStyle WindowStyle = ProcessWindowStyle.Maximized;
     const int charsWidth = 32;
     const int charsHeight = 32;
 
@@ -30,17 +30,18 @@ internal class Program
             Console.WriteLine(path);
 
             // Config
-            process.StartInfo.FileName = @"C:\Users\Raphael\AppData\Local\Microsoft\WindowsApps\wt.exe";
+            string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? "(ERROR: no environment variable AppData)";
+            process.StartInfo.FileName = $"{appDataDir}\\..\\Local\\Microsoft\\WindowsApps\\wt.exe";
             process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
-            process.StartInfo.WindowStyle = Window;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.WindowStyle = WindowStyle;     // Typically maximized
+            process.StartInfo.UseShellExecute = false;       // Don't use original window, open new window
+            //process.StartInfo.RedirectStandardInput = true;  // Redirect IO
+            //process.StartInfo.RedirectStandardOutput = true; // Redirect IO
             // Open in new window
             process.Start();
-            Console.SetIn(process.StandardOutput);
-            Console.SetOut(process.StandardInput);
-            process.WaitForExit();
+            //Console.SetIn(process.StandardOutput); // Redirect IO
+            //Console.SetOut(process.StandardInput); // Redirect IO
+            //process.WaitForExit();
         }
         // Set up core loop
         else
@@ -140,6 +141,7 @@ internal class Program
             Console.ReadLine();
             //Console.Clear();
             // Clear the scrollback
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine("\x1b[3J");
         }
     }
