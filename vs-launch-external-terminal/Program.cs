@@ -30,18 +30,12 @@ internal class Program
             Console.WriteLine(path);
 
             // Config
-            string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? "(ERROR: no environment variable AppData)";
+            string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? throw new Exception("No environment variable AppData.");
             process.StartInfo.FileName = $"{appDataDir}\\..\\Local\\Microsoft\\WindowsApps\\wt.exe";
             process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
-            process.StartInfo.WindowStyle = WindowStyle;     // Typically maximized
-            process.StartInfo.UseShellExecute = false;       // Don't use original window, open new window
-            //process.StartInfo.RedirectStandardInput = true;  // Redirect IO
-            //process.StartInfo.RedirectStandardOutput = true; // Redirect IO
-            // Open in new window
+            process.StartInfo.WindowStyle = WindowStyle; // Typically maximized
+            process.StartInfo.UseShellExecute = false;   // Don't use original window, open new window
             process.Start();
-            //Console.SetIn(process.StandardOutput); // Redirect IO
-            //Console.SetOut(process.StandardInput); // Redirect IO
-            //process.WaitForExit();
         }
         // Set up core loop
         else
