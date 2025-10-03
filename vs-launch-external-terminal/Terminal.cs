@@ -1,4 +1,6 @@
-﻿
+﻿// TODO: robo-type thread sleep interval
+
+
 using System;
 
 namespace vs_launch_external_terminal;

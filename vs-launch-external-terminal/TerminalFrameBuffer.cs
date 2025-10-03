@@ -263,12 +263,21 @@ public sealed class TerminalFrameBuffer
         return result;
     }
 
-    public void Display()
+    public void Write()
     {
-        //Console.Clear();
         string display = this.ToString();
-        // Reset cursor position
-        //Console.SetCursorPosition(0, 0);
         Console.Write(display);
+    }
+
+    public void Overwrite()
+    {
+        Console.SetCursorPosition(0, 0);
+        Write();
+    }
+
+    public void ClearWrite()
+    {
+        Console.Clear();
+        Write();
     }
 }
