@@ -51,7 +51,7 @@ internal class Program
 
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Console.OutputEncoding = Encoding.Unicode;
+        Console.InputEncoding = Console.OutputEncoding = Encoding.Unicode;
         Console.Clear();
 
         // BOOTSTRAP into another terminal
