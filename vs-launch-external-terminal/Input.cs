@@ -1,12 +1,11 @@
 ﻿namespace vs_launch_external_terminal;
 
 /// <summary>
-///     
+///     Input related functions.
 /// </summary>
 public static class Input
 {
     private readonly static Thread InputThread = CreateInputThread();
-    private readonly static Action<ConsoleKey> OnReadKey;
     private readonly static List<ConsoleKey> LastFrameKeys = [];
     private readonly static List<ConsoleKey> CurrentFrameKeys = [];
 

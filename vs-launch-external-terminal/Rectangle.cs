@@ -1,5 +1,8 @@
 ﻿namespace vs_launch_external_terminal;
 
+/// <summary>
+///     Rectangle for manipulating areas for <see cref="TerminalFrameBuffer"/>.
+/// </summary>
 public struct Rectangle
 {
     public int x;

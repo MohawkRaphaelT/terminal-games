@@ -3,6 +3,9 @@ using System.Text;
 
 namespace vs_launch_external_terminal;
 
+/// <summary>
+///     
+/// </summary>
 public sealed class TerminalFrameBuffer
 {
     private readonly string[,] BackingArray;

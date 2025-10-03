@@ -1,7 +1,4 @@
-﻿// TODO: robo-type thread sleep interval
-
-
-using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace vs_launch_external_terminal;
 
@@ -10,21 +7,65 @@ namespace vs_launch_external_terminal;
 /// </summary>
 public static class Terminal
 {
-    public static bool WriteWithWordBreaks { get; set; } = true;
-    public static char WordBreakCharacter { get; set; } = ' ';
-
     private delegate void WriteAction(string value);
     private delegate void WriteObjAction(object obj);
-    private static WriteAction OnWrite => WriteWithWordBreaks ? FancyWrite : Console.Write;
-    private static WriteAction OnWriteLine => WriteWithWordBreaks ? FancyWriteLine : Console.WriteLine;
-    private static WriteObjAction OnWriteObj => WriteWithWordBreaks ? FancyWrite : Console.Write;
-    private static WriteObjAction OnWriteLineObj => WriteWithWordBreaks ? FancyWriteLine : Console.WriteLine;
+    private static WriteAction BasicWrite => UseRoboType ? RoboWrite : Console.Write;
+    private static WriteAction BasicWriteLine => UseRoboType ? RoboWriteLine : Console.WriteLine;
+    private static WriteObjAction BasicWriteObj => UseRoboType ? RoboWrite : Console.Write;
+    private static WriteObjAction BasicWriteLineObj => UseRoboType ? RoboWriteLine : Console.WriteLine;
+    private static WriteAction OnWrite => WriteWithWordBreaks ? FancyWrite : BasicWrite;
+    private static WriteAction OnWriteLine => WriteWithWordBreaks ? FancyWriteLine : BasicWriteLine;
+    private static WriteObjAction OnWriteObj => WriteWithWordBreaks ? FancyWrite : BasicWriteObj;
+    private static WriteObjAction OnWriteLineObj => WriteWithWordBreaks ? FancyWriteLine : BasicWriteLineObj;
 
+
+    /// <summary>
+    ///     Makes Terminal.Write and .WriteLine use 
+    /// </summary>
+    public static bool UseRoboType { get; set; } = true;
+
+    /// <summary>
+    ///     The interval in milliseconds between character writes to the screen.
+    /// </summary>
+    public static int RoboTypeIntervalMilliseconds { get; set; } = 50;
+
+    /// <summary>
+    ///     Write function will put words on new line wrather than wrapping with a word break.
+    /// </summary>
+    public static bool WriteWithWordBreaks { get; set; } = false;
+
+    /// <summary>
+    ///     The character to use for word breaks.
+    /// </summary>
+    public static char WordBreakCharacter { get; set; } = ' ';
+
+
+    private static void RoboWrite(string value)
+    {
+        char[] chars = value.ToCharArray();
+        foreach (char @char in chars)
+        {
+            Console.Write(@char);
+            Thread.Sleep(RoboTypeIntervalMilliseconds);
+        }
+    }
+    private static void RoboWriteLine(string value)
+    {
+        RoboWrite(value);
+        Console.Write('\n');
+        Thread.Sleep(RoboTypeIntervalMilliseconds);
+    }
+    private static void RoboWrite(object obj) => RoboWrite(obj.ToString() ?? string.Empty);
+    private static void RoboWriteLine(object obj) => RoboWriteLine(obj.ToString() ?? string.Empty);
+
+
+    // Word break writting
     private static void FancyWrite(string value)
     {
         string[] elements = value.Split(WordBreakCharacter);
-        foreach (string element in elements)
+        for (int i = 0; i < elements.Length; i++)
         {
+            var element = elements[i];
             int cursorPositionX = Console.GetCursorPosition().Left;
             int windowWidth = Console.WindowWidth;
             int remainingLineCharacters = windowWidth - cursorPositionX;
@@ -34,8 +75,10 @@ public static class Terminal
                 Console.WriteLine();
             // A. Print as usual, or
             // B. falls through and still doesn't fit on its own, print anyways
-            Console.Write(element);
-            Console.Write(" ");
+            BasicWrite(element);
+            // Add space where removed
+            if (i < elements.Length - 1)
+                BasicWriteObj(WordBreakCharacter);
         }
     }
     private static void FancyWrite(object obj) => FancyWrite(obj.ToString() ?? string.Empty);
@@ -46,7 +89,7 @@ public static class Terminal
     }
     private static void FancyWriteLine(object obj) => FancyWriteLine(obj.ToString() ?? string.Empty);
 
-
+    // Terminal writing but with color support
     private static void Write(Action consoleWrite, ConsoleColor foregroundColor)
     {
         var fgColor = Console.ForegroundColor;
@@ -64,6 +107,7 @@ public static class Terminal
         Console.ForegroundColor = fgColor;
         Console.BackgroundColor = bgColor;
     }
+
 
     // Write
     public static void Write(string value) => OnWrite(value);

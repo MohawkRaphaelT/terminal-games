@@ -5,6 +5,9 @@ using System.Timers;
 
 namespace vs_launch_external_terminal;
 
+/// <summary>
+///     
+/// </summary>
 internal class Program
 {
     const int charsWidth = 128 / 1;
@@ -131,6 +134,11 @@ internal class Program
         Console.WriteLine($"Terminal: {process.StartInfo.FileName}");
     }
 
+    private static void GameLoopTimerEvents(object? o, ElapsedEventArgs sender)
+    {
+        CanGameExecuteTick = true;
+    }
+
     private static void Test()
     {
         //Console.SetWindowPosition(0, 0);
@@ -193,9 +201,4 @@ internal class Program
         }
     }
 
-
-    private static void GameLoopTimerEvents(object? o, ElapsedEventArgs sender)
-    {
-        CanGameExecuteTick = true;
-    }
 }
