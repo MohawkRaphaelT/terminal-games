@@ -21,21 +21,24 @@ internal class Program
         //Console.text
         Console.WriteLine("❤️😭✨✅\U0001f979🔥⭐😂❤️‍\U0001fa79");
 
-        // BOOTSRAP into another terminal
+        // BOOTSTRAP into another terminal
         if (args.Length == 0 && !runNatively)
         {
             // Run itself
-            Process process = new();
             string path = Directory.GetCurrentDirectory() + @"\" + Assembly.GetExecutingAssembly().GetName().Name + ".exe";
             Console.WriteLine(path);
 
             // Config
             string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? throw new Exception("No environment variable AppData.");
+            Process process = new();
             process.StartInfo.FileName = $"{appDataDir}\\..\\Local\\Microsoft\\WindowsApps\\wt.exe";
             process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
             process.StartInfo.WindowStyle = WindowStyle; // Typically maximized
             process.StartInfo.UseShellExecute = false;   // Don't use original window, open new window
             process.Start();
+            process.PriorityBoostEnabled = true;
+            process.PriorityClass = ProcessPriorityClass.RealTime;
+            //process.Start();
         }
         // Set up core loop
         else
@@ -131,11 +134,12 @@ internal class Program
         Console.SetWindowSize(charsWidth*2, charsHeight);
         TerminalFrameBuffer fb = new(charsWidth, charsHeight, "❤ "); // red heart is half width for whatever reason
         Console.CursorVisible = false;
+        Console.SetCursorPosition(0, 0);
+        fb.Display();
         string a = "😂";
         string b = "❤ ";
         bool state = true;
         int i = 0;
-        fb.Display();
         int width = charsWidth;
         int height = charsHeight;
         while (true)
@@ -160,6 +164,9 @@ internal class Program
             //Console.Clear();
             // Clear the scrollback
             //Console.WriteLine("\x1b[3J");
+
+            Thread.Sleep(1);
+            break;
         }
     }
 
