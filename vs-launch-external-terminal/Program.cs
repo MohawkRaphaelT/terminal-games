@@ -10,9 +10,7 @@ namespace vs_launch_external_terminal;
 /// </summary>
 internal class Program
 {
-    const int charsWidth = 128 / 1;
-    const int charsHeight = 64 / 1;
-
+    private const string BootstrapArg = "DoBoostrap";
     private static readonly System.Timers.Timer gameLoopTimer = new();
     private static TerminalGame? game;
     private static bool CanGameExecuteTick = true;
@@ -51,11 +49,14 @@ internal class Program
 
     static void Main(string[] args)
     {
-        Console.InputEncoding = Console.OutputEncoding = Encoding.Unicode;
+        Console.InputEncoding = Encoding.Unicode;
+        Console.OutputEncoding = Encoding.Unicode;
         Console.Clear();
 
         // BOOTSTRAP into another terminal
-        if (args.Length == 0 && TerminalGame.BootstapIntoWindowsTerminal)
+        bool hasArgs = args.Length > 0;
+        bool doBoostrap = hasArgs ? args[0] == BootstrapArg : false;
+        if (TerminalGameConfig.UseExternalWindowsTerminal && doBoostrap)
         {
             BoostrapIntoWindowsTerminal();
         }
@@ -107,6 +108,8 @@ internal class Program
             }
         }
 
+        // Clear colors before exiting
+        Console.ResetColor();
         // Force exit due to threads in background
         Environment.Exit(0);
     }
@@ -119,10 +122,18 @@ internal class Program
 
         // Configure new process with executable
         string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? throw new Exception("No environment variable AppData.");
+        string terminalPath = appDataDir + @"\..\Local\Microsoft\WindowsApps\wt.exe";
+        if (!File.Exists(terminalPath))
+        {
+            string msg =
+                $"Termianl program does not exists. Make sure you install it first." +
+                $"Expected file path: {terminalPath}";
+            throw new Exception(msg);
+        }
         Process process = new();
         process.StartInfo.FileName = appDataDir + @"\..\Local\Microsoft\WindowsApps\wt.exe";
-        process.StartInfo.Arguments = $"\"{path}\" \"IsBootstrapped\"";
-        process.StartInfo.WindowStyle = TerminalGame.WindowStyle;
+        process.StartInfo.Arguments = $"\"{path}\" \"{BootstrapArg}\"";
+        process.StartInfo.WindowStyle = TerminalGameConfig.WindowStyle;
         process.StartInfo.UseShellExecute = false; // Don't use original window, open new window
         process.Start();
         // Elevate priority to get better performance
@@ -155,6 +166,9 @@ internal class Program
         //fb.SetCircle("😂", -3, -3, 16); // 
         ////fb.SetCharRow(" ", Console.WindowHeight - 1); // clear bottom line for typing
         //Console.Clear();
+
+        const int charsWidth = 128 / 1;
+        const int charsHeight = 64 / 1;
 
         Console.SetWindowSize(charsWidth * 2, charsHeight);
         TerminalFrameBuffer fb = new(charsWidth, charsHeight, "❤ "); // red heart is half width for whatever reason

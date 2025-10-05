@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
 namespace vs_launch_external_terminal;
 
 public class TerminalGame
-{
-    // DO NOT DELETE. Required for program configuration.
-    public static readonly bool BootstapIntoWindowsTerminal = true;
-    public static readonly ProcessWindowStyle WindowStyle = ProcessWindowStyle.Maximized;
-    
-    // Variables
+{   
+    // Place your variables here
 
 
     /// Run once before Execute begins
