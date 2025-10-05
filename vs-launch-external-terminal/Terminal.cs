@@ -7,6 +7,8 @@ namespace vs_launch_external_terminal;
 /// </summary>
 public static class Terminal
 {
+    private static bool isCursorVisible = true;
+
     private delegate void WriteAction(string value);
     private delegate void WriteObjAction(object obj);
     private static WriteAction BasicWrite => UseRoboType ? RoboWrite : Console.Write;
@@ -20,7 +22,8 @@ public static class Terminal
 
 
     /// <summary>
-    ///     Makes Terminal.Write and .WriteLine use 
+    ///     Makes Terminal.Write and .WriteLine write each character one by one
+    ///     using the timing defined in <see cref="RoboTypeIntervalMilliseconds"/>.
     /// </summary>
     public static bool UseRoboType { get; set; } = true;
 
@@ -30,7 +33,8 @@ public static class Terminal
     public static int RoboTypeIntervalMilliseconds { get; set; } = 50;
 
     /// <summary>
-    ///     Write function will put words on new line wrather than wrapping with a word break.
+    ///     Terminal.Write and .WriteLine functions will put words on new line rather
+    ///     than wrapping by breaking within a word.
     /// </summary>
     public static bool WriteWithWordBreaks { get; set; } = false;
 
@@ -40,6 +44,168 @@ public static class Terminal
     public static char WordBreakCharacter { get; set; } = ' ';
 
 
+    public static void SetWindowPosition(int x, int y)
+    {
+        int cx = Math.Clamp(x, 0, int.MaxValue);
+        int cy = Math.Clamp(y, 0, int.MaxValue);
+        Console.SetWindowPosition(cx, cy);
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static bool IsCapslockOn => Console.CapsLock;
+    
+    /// <summary>
+    ///     
+    /// </summary>
+    public static bool IsNumberLockOn => Console.NumberLock;
+
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int LargestWindowWidth => Console.LargestWindowWidth;
+    
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int LargestWindowHeight => Console.LargestWindowHeight;
+
+    /// <summary>
+    ///     Plays the sound of a beep through the console speaker.
+    /// </summary>
+    public static void Beep()
+        => Console.Beep();
+
+    /// <summary>
+    ///     Delays the terminal by <paramref name="milliseconds"/>.
+    /// </summary>
+    /// <param name="milliseconds">The amount of time to delay by.</param>
+    public static void Delay(int milliseconds)
+        => Thread.Sleep(milliseconds);
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static void Clear()
+        => Console.Clear();
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static bool IsCursorVisible
+    {
+        get => isCursorVisible;
+        set => isCursorVisible = Console.CursorVisible = value;
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="top"></param>
+    public static void SetCursorPosition(int left, int top)
+        => Console.SetCursorPosition(left, top);
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int CursorLeft
+    {
+        get => Console.CursorLeft;
+        set => Console.CursorLeft = value;
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int CursorTop
+    {
+        get => Console.CursorTop;
+        set => Console.CursorTop= value;
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    public static void SetWindowSize(int width, int height)
+    {
+        int x = Math.Clamp(width, 1, LargestWindowWidth);
+        int y = Math.Clamp(height, 1, LargestWindowHeight);
+        Console.SetWindowSize(x, y);
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int WindowWidth
+    {
+        get => Console.WindowWidth;
+        set => Console.WindowWidth = value;
+    }
+
+    /// <summary>
+    ///     
+    /// </summary>
+    public static int WindowHeight
+    {
+        get => Console.WindowHeight;
+        set => Console.WindowHeight = value;
+    }
+
+    /// <summary>
+    ///     Set console window title.
+    /// </summary>
+    /// <param name="title">The title to use.</param>
+    public static void SetTitle(string title)
+        => Console.Title = title;
+
+    /// <summary>
+    ///     Gets or sets the foreground color of the console.
+    /// </summary>
+    public static ConsoleColor ForegroundColor
+    {
+        get => Console.ForegroundColor;
+        set => Console.ForegroundColor = value;
+    }
+
+    /// <summary>
+    ///     Gets or sets the background color of the console.
+    /// </summary>
+    public static ConsoleColor BackgroundColor
+    {
+        get => Console.BackgroundColor;
+        set => Console.BackgroundColor = value;
+    }
+
+    public static string ReadLine()
+        => Console.ReadLine() ?? string.Empty;
+
+    /// <summary>
+    ///     Clears the current line;
+    /// </summary>
+    public static void ClearLine()
+    {
+        CursorLeft = 0;
+        char[] spaces = new char[WindowWidth];
+        for (int i = 0; i < spaces.Length; i++)
+            spaces[i] = ' ';
+        Console.Write(spaces);
+        CursorLeft = 0;
+    }
+
+    public static string ReadAndClearLine()
+    {
+        string value = ReadLine();
+        SetCursorPosition(0, Math.Clamp(CursorTop - 1, 0, WindowWidth));
+        ClearLine();
+        return value;
+    }
+
+    // "Auto-type" looking feature.
     private static void RoboWrite(string value)
     {
         char[] chars = value.ToCharArray();
@@ -57,7 +223,6 @@ public static class Terminal
     }
     private static void RoboWrite(object obj) => RoboWrite(obj.ToString() ?? string.Empty);
     private static void RoboWriteLine(object obj) => RoboWriteLine(obj.ToString() ?? string.Empty);
-
 
     // Word break writting
     private static void FancyWrite(string value)
@@ -107,7 +272,6 @@ public static class Terminal
         Console.ForegroundColor = fgColor;
         Console.BackgroundColor = bgColor;
     }
-
 
     // Write
     public static void Write(string value) => OnWrite(value);

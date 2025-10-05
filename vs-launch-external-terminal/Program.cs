@@ -46,7 +46,6 @@ internal class Program
         }
     }
 
-
     static void Main(string[] args)
     {
         Console.InputEncoding = Encoding.Unicode;
@@ -63,6 +62,17 @@ internal class Program
         // Set up core loop
         else
         {
+            // Ensure maximized for local console, too. Can't see anchor position though.
+            if (TerminalGameConfig.WindowStyle == ProcessWindowStyle.Maximized)
+            {
+                Terminal.SetWindowPosition(0, 0);
+                Terminal.SetWindowSize(Terminal.LargestWindowWidth, Terminal.LargestWindowHeight);
+            }
+            Terminal.SetWindowSize(Terminal.LargestWindowWidth, Terminal.LargestWindowHeight);
+
+            // Make sure cursor state is consistend for all OSs.
+            Terminal.IsCursorVisible = true;
+            // Spin up new thread for input
             Input.InitInputThread();
             game = new();
             game.Setup();

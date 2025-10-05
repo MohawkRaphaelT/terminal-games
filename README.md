@@ -9,4 +9,8 @@ todo:
 - color bg
 - framebuffer obj
 - terminal utility
+- Force exit: ctrl+c
 
+
+
+modify console colors
