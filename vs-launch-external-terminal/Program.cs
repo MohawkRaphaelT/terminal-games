@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using System.Timers;
 
 namespace vs_launch_external_terminal;
@@ -10,7 +8,6 @@ namespace vs_launch_external_terminal;
 /// </summary>
 internal class Program
 {
-    private const string BootstrapArg = "DoBoostrap";
     private static readonly System.Timers.Timer gameLoopTimer = new();
     private static TerminalGame? game;
     private static bool CanGameExecuteTick = true;
@@ -48,73 +45,61 @@ internal class Program
 
     static void Main(string[] args)
     {
+        // Set IO aznd clear window.
         Console.InputEncoding = Encoding.Unicode;
         Console.OutputEncoding = Encoding.Unicode;
         Console.Clear();
 
-        // BOOTSTRAP into another terminal
-        bool hasArgs = args.Length > 0;
-        bool doBoostrap = hasArgs ? args[0] == BootstrapArg : false;
-        if (TerminalGameConfig.UseExternalWindowsTerminal && doBoostrap)
-        {
-            BoostrapIntoWindowsTerminal();
-        }
-        // Set up core loop
-        else
-        {
-            // Ensure maximized for local console, too. Can't see anchor position though.
-            if (TerminalGameConfig.WindowStyle == ProcessWindowStyle.Maximized)
-            {
-                Terminal.SetWindowPosition(0, 0);
-                Terminal.SetWindowSize(Terminal.LargestWindowWidth, Terminal.LargestWindowHeight);
-            }
-            Terminal.SetWindowSize(Terminal.LargestWindowWidth, Terminal.LargestWindowHeight);
+        // Prep
+        // Make sure cursor state is consistent for all OSs.
+        Terminal.CursorVisible = true;
+        // Spin up new thread for input
+        Input.InitInputThread();
+        // Create and setup game
+        game = new();
+        game.Setup();
+        // Set up Time helper
+        if (Time.AutoStart)
+            Time.Start();
 
-            // Make sure cursor state is consistend for all OSs.
-            Terminal.IsCursorVisible = true;
-            // Spin up new thread for input
-            Input.InitInputThread();
-            game = new();
-            game.Setup();
-            // Set up timer
-            if (Time.AutoStart)
-                Time.Start();
-
-            bool doLoop = true;
-            while (doLoop && !Input.IsKeyPressed(ConsoleKey.Escape))
+        // Core "loop"
+        bool doLoop = true;
+        while (doLoop && !Input.IsKeyPressed(ConsoleKey.Escape))
+        {
+            // Refresh inputs
+            Input.PreparePollNextInput();
+            switch (TerminalExecuteMode)
             {
-                Input.PreparePollNextInput();
-                switch (TerminalExecuteMode)
-                {
-                    case TerminalExecuteMode.ExecuteOnce:
-                        game.Execute();
-                        // If still in once mode, kill loop
-                        if (TerminalExecuteMode == TerminalExecuteMode.ExecuteOnce)
-                            doLoop = false;
-                        break;
-                    case TerminalExecuteMode.ExecuteLoop:
-                        game.Execute();
-                        break;
-                    case TerminalExecuteMode.ExecuteTime:
-                        TargetFPS = targetFPS; // Force update interval
-                        gameLoopTimer.Elapsed += GameLoopTimerEvents;
-                        gameLoopTimer.Start();
-                        while (TerminalExecuteMode == TerminalExecuteMode.ExecuteTime &&
-                               !Input.IsKeyPressed(ConsoleKey.Escape))
+                case TerminalExecuteMode.ExecuteOnce:
+                    game.Execute();
+                    // If still in once mode, kill loop
+                    if (TerminalExecuteMode == TerminalExecuteMode.ExecuteOnce)
+                        doLoop = false;
+                    break;
+                case TerminalExecuteMode.ExecuteLoop:
+                    game.Execute();
+                    break;
+                case TerminalExecuteMode.ExecuteTime:
+                    TargetFPS = targetFPS; // Force update interval
+                    gameLoopTimer.Elapsed += GameLoopTimerEvents;
+                    gameLoopTimer.Start();
+                    // Run loop while in this mode
+                    while (TerminalExecuteMode == TerminalExecuteMode.ExecuteTime &&
+                           !Input.IsKeyPressed(ConsoleKey.Escape))
+                    {
+                        // Refresh once enough time has passed, unblocking
+                        if (CanGameExecuteTick)
                         {
-                            if (CanGameExecuteTick)
-                            {
-                                CanGameExecuteTick = false;
-                                game.Execute();
-                            }
+                            CanGameExecuteTick = false;
+                            game.Execute();
                         }
-                        gameLoopTimer.Stop();
-                        gameLoopTimer.Elapsed -= GameLoopTimerEvents;
-                        break;
-                    default:
-                        string msg = $"{nameof(vs_launch_external_terminal.TerminalExecuteMode)}{TerminalExecuteMode}";
-                        throw new NotImplementedException(msg);
-                }
+                    }
+                    gameLoopTimer.Stop();
+                    gameLoopTimer.Elapsed -= GameLoopTimerEvents;
+                    break;
+                default:
+                    string msg = $"{nameof(vs_launch_external_terminal.TerminalExecuteMode)}{TerminalExecuteMode}";
+                    throw new NotImplementedException(msg);
             }
         }
 
@@ -122,37 +107,6 @@ internal class Program
         Console.ResetColor();
         // Force exit due to threads in background
         Environment.Exit(0);
-    }
-
-    private static void BoostrapIntoWindowsTerminal()
-    {
-        // Get path to this executable
-        string path = Directory.GetCurrentDirectory() + @"\" + Assembly.GetExecutingAssembly().GetName().Name + ".exe";
-        //Console.WriteLine(path);
-
-        // Configure new process with executable
-        string appDataDir = Environment.GetEnvironmentVariable("AppData") ?? throw new Exception("No environment variable AppData.");
-        string terminalPath = appDataDir + @"\..\Local\Microsoft\WindowsApps\wt.exe";
-        if (!File.Exists(terminalPath))
-        {
-            string msg =
-                $"Termianl program does not exists. Make sure you install it first." +
-                $"Expected file path: {terminalPath}";
-            throw new Exception(msg);
-        }
-        Process process = new();
-        process.StartInfo.FileName = appDataDir + @"\..\Local\Microsoft\WindowsApps\wt.exe";
-        process.StartInfo.Arguments = $"\"{path}\" \"{BootstrapArg}\"";
-        process.StartInfo.WindowStyle = TerminalGameConfig.WindowStyle;
-        process.StartInfo.UseShellExecute = false; // Don't use original window, open new window
-        process.Start();
-        // Elevate priority to get better performance
-        process.PriorityBoostEnabled = true;
-        process.PriorityClass = ProcessPriorityClass.RealTime;
-
-        Console.WriteLine($"Boostrapping completed.");
-        Console.WriteLine($"Program : {path}");
-        Console.WriteLine($"Terminal: {process.StartInfo.FileName}");
     }
 
     private static void GameLoopTimerEvents(object? o, ElapsedEventArgs sender)

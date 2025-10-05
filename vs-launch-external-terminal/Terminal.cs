@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Threading;
 
 namespace vs_launch_external_terminal;
 
@@ -8,6 +9,7 @@ namespace vs_launch_external_terminal;
 public static class Terminal
 {
     private static bool isCursorVisible = true;
+    private static readonly object ConsoleLock = new();
 
     private delegate void WriteAction(string value);
     private delegate void WriteObjAction(object obj);
@@ -22,15 +24,97 @@ public static class Terminal
 
 
     /// <summary>
+    ///     Gets or sets the background color of the console.
+    /// </summary>
+    public static ConsoleColor BackgroundColor
+    {
+        get => Console.BackgroundColor;
+        set => Console.BackgroundColor = value;
+    }
+
+    /// <summary>
+    ///     The cursor position in columns from the left edge of the console window.
+    /// </summary>
+    public static int CursorLeft
+    {
+        get => Console.CursorLeft;
+        set => Console.CursorLeft = value;
+    }
+
+    /// <summary>
+    ///     The cursor position in rows from the top edge of the console window.
+    /// </summary>
+    public static int CursorTop
+    {
+        get => Console.CursorTop;
+        set => Console.CursorTop = value;
+    }
+
+    /// <summary>
+    ///     Whether the cursor is visible or not. Can be set.
+    /// </summary>
+    public static bool CursorVisible
+    {
+        get => isCursorVisible;
+        set => isCursorVisible = Console.CursorVisible = value;
+    }
+
+    /// <summary>
+    ///     Gets or sets the foreground color of the console.
+    /// </summary>
+    public static ConsoleColor ForegroundColor
+    {
+        get => Console.ForegroundColor;
+        set => Console.ForegroundColor = value;
+    }
+
+    /// <summary>
+    ///     True is Caps Lock key is on.
+    /// </summary>
+    public static bool IsCapsLockOn => Console.CapsLock;
+
+    /// <summary>
+    ///     True if Num Lock key is on.
+    /// </summary>
+    public static bool IsNumLockOn => Console.NumberLock;
+
+    /// <summary>
+    ///     The maximum number of rows the window can be on the current display.
+    /// </summary>
+    public static int LargestWindowHeight => Console.LargestWindowHeight;
+
+    /// <summary>
+    ///     The maximum number of columns the window can be on the current display.
+    /// </summary>
+    public static int LargestWindowWidth => Console.LargestWindowWidth;
+
+    /// <summary>
+    ///     The interval in milliseconds between character writes to the screen.
+    /// </summary>
+    public static int RoboTypeIntervalMilliseconds { get; set; } = 50;
+
+    /// <summary>
     ///     Makes Terminal.Write and .WriteLine write each character one by one
     ///     using the timing defined in <see cref="RoboTypeIntervalMilliseconds"/>.
     /// </summary>
     public static bool UseRoboType { get; set; } = true;
 
     /// <summary>
-    ///     The interval in milliseconds between character writes to the screen.
+    ///     The current number of rows the window height is.
+    public static int WindowHeight
+    {
+        get => Console.WindowHeight;
+        set => Console.WindowHeight = value;
+    }
+
+    /// <summary>
+    ///     The current number of columns the window width is.
     /// </summary>
-    public static int RoboTypeIntervalMilliseconds { get; set; } = 50;
+    public static int WindowWidth
+    {
+        get => Console.WindowWidth;
+        set => Console.WindowWidth = value;
+    }
 
     /// <summary>
     ///     Terminal.Write and .WriteLine functions will put words on new line rather
@@ -44,34 +128,6 @@ public static class Terminal
     public static char WordBreakCharacter { get; set; } = ' ';
 
 
-    public static void SetWindowPosition(int x, int y)
-    {
-        int cx = Math.Clamp(x, 0, int.MaxValue);
-        int cy = Math.Clamp(y, 0, int.MaxValue);
-        Console.SetWindowPosition(cx, cy);
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static bool IsCapslockOn => Console.CapsLock;
-    
-    /// <summary>
-    ///     
-    /// </summary>
-    public static bool IsNumberLockOn => Console.NumberLock;
-
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int LargestWindowWidth => Console.LargestWindowWidth;
-    
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int LargestWindowHeight => Console.LargestWindowHeight;
-
     /// <summary>
     ///     Plays the sound of a beep through the console speaker.
     /// </summary>
@@ -79,113 +135,13 @@ public static class Terminal
         => Console.Beep();
 
     /// <summary>
-    ///     Delays the terminal by <paramref name="milliseconds"/>.
-    /// </summary>
-    /// <param name="milliseconds">The amount of time to delay by.</param>
-    public static void Delay(int milliseconds)
-        => Thread.Sleep(milliseconds);
-
-    /// <summary>
-    ///     
+    ///     Clear the current screen.
     /// </summary>
     public static void Clear()
         => Console.Clear();
 
     /// <summary>
-    ///     
-    /// </summary>
-    public static bool IsCursorVisible
-    {
-        get => isCursorVisible;
-        set => isCursorVisible = Console.CursorVisible = value;
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="top"></param>
-    public static void SetCursorPosition(int left, int top)
-        => Console.SetCursorPosition(left, top);
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int CursorLeft
-    {
-        get => Console.CursorLeft;
-        set => Console.CursorLeft = value;
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int CursorTop
-    {
-        get => Console.CursorTop;
-        set => Console.CursorTop= value;
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    public static void SetWindowSize(int width, int height)
-    {
-        int x = Math.Clamp(width, 1, LargestWindowWidth);
-        int y = Math.Clamp(height, 1, LargestWindowHeight);
-        Console.SetWindowSize(x, y);
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int WindowWidth
-    {
-        get => Console.WindowWidth;
-        set => Console.WindowWidth = value;
-    }
-
-    /// <summary>
-    ///     
-    /// </summary>
-    public static int WindowHeight
-    {
-        get => Console.WindowHeight;
-        set => Console.WindowHeight = value;
-    }
-
-    /// <summary>
-    ///     Set console window title.
-    /// </summary>
-    /// <param name="title">The title to use.</param>
-    public static void SetTitle(string title)
-        => Console.Title = title;
-
-    /// <summary>
-    ///     Gets or sets the foreground color of the console.
-    /// </summary>
-    public static ConsoleColor ForegroundColor
-    {
-        get => Console.ForegroundColor;
-        set => Console.ForegroundColor = value;
-    }
-
-    /// <summary>
-    ///     Gets or sets the background color of the console.
-    /// </summary>
-    public static ConsoleColor BackgroundColor
-    {
-        get => Console.BackgroundColor;
-        set => Console.BackgroundColor = value;
-    }
-
-    public static string ReadLine()
-        => Console.ReadLine() ?? string.Empty;
-
-    /// <summary>
-    ///     Clears the current line;
+    ///     Clears the current line without advancing to the next line.
     /// </summary>
     public static void ClearLine()
     {
@@ -197,6 +153,19 @@ public static class Terminal
         CursorLeft = 0;
     }
 
+    /// <summary>
+    ///     Delays the terminal by <paramref name="milliseconds"/>.
+    /// </summary>
+    /// <param name="milliseconds">The amount of time to delay by.</param>
+    public static void Delay(int milliseconds)
+        => Thread.Sleep(milliseconds);
+
+    /// <summary>
+    ///     Reads the next line of text, then clears that line without advancing to a new line.
+    /// </summary>
+    /// <returns>
+    ///     String input from user.
+    /// </returns>
     public static string ReadAndClearLine()
     {
         string value = ReadLine();
@@ -204,6 +173,43 @@ public static class Terminal
         ClearLine();
         return value;
     }
+
+    /// <summary>
+    ///     Reads the next line of text.
+    /// </summary>
+    /// <returns>
+    ///     String input from user.
+    /// </returns>
+    public static string ReadLine()
+        => Console.ReadLine() ?? string.Empty;
+
+    /// <summary>
+    ///     Sets the cursor position on the current screen view.
+    /// </summary>
+    /// <param name="left">The column position of the cursor.</param>
+    /// <param name="top">The row position of the cursor.</param>
+    public static void SetCursorPosition(int left, int top)
+        => Console.SetCursorPosition(left, top);
+
+    /// <summary>
+    ///     Set console window title.
+    /// </summary>
+    /// <param name="title">The title to use.</param>
+    public static void SetTitle(string title)
+        => Console.Title = title;
+
+    /// <summary>
+    ///     Set the window size in rows/columns.
+    /// </summary>
+    /// <param name="columnsWidth">The number of columns.</param>
+    /// <param name="rowsHeight">The number of rows.</param>
+    public static void SetWindowSize(int columnsWidth, int rowsHeight)
+    {
+        int x = Math.Clamp(columnsWidth, 1, LargestWindowWidth);
+        int y = Math.Clamp(rowsHeight, 1, LargestWindowHeight);
+        Console.SetWindowSize(x, y);
+    }
+
 
     // "Auto-type" looking feature.
     private static void RoboWrite(string value)
@@ -231,11 +237,9 @@ public static class Terminal
         for (int i = 0; i < elements.Length; i++)
         {
             var element = elements[i];
-            int cursorPositionX = Console.GetCursorPosition().Left;
-            int windowWidth = Console.WindowWidth;
-            int remainingLineCharacters = windowWidth - cursorPositionX;
+            int remainingLineCharacters = WindowWidth - CursorLeft - 1;
             // If no room, new line
-            bool canFit = element.Length < remainingLineCharacters - 1;
+            bool canFit = element.Length < remainingLineCharacters;
             if (!canFit)
                 Console.WriteLine();
             // A. Print as usual, or
