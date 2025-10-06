@@ -1,4 +1,4 @@
-﻿namespace vs_launch_external_terminal;
+﻿namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Execution mode for <see cref="TerminalGame"/>.

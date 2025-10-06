@@ -1,4 +1,4 @@
-﻿namespace vs_launch_external_terminal;
+﻿namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Rectangle for manipulating areas for <see cref="TerminalFrameBuffer"/>.

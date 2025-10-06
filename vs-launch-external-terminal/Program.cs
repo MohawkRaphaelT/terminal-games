@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Timers;
 
-namespace vs_launch_external_terminal;
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     
@@ -98,7 +98,7 @@ internal class Program
                     gameLoopTimer.Elapsed -= GameLoopTimerEvents;
                     break;
                 default:
-                    string msg = $"{nameof(vs_launch_external_terminal.TerminalExecuteMode)}{TerminalExecuteMode}";
+                    string msg = $"{nameof(MohawkTerminalGame.TerminalExecuteMode)}{TerminalExecuteMode}";
                     throw new NotImplementedException(msg);
             }
         }

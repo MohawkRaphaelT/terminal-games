@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading;
 
-namespace vs_launch_external_terminal;
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     A utility class built on top of <see cref="Console"/>.

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace vs_launch_external_terminal;
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Generate random values.

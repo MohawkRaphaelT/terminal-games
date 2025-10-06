@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text;
 
-namespace vs_launch_external_terminal;
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     

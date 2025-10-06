@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace vs_launch_external_terminal;
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Time related information.
