@@ -107,18 +107,18 @@ public static class Random
     ///     Get a random console color.
     /// </summary>
     /// <returns>
-    ///     Returns a random <see cref="ConsoleColor"/>.
+    ///     Returns a random <see cref="System.ConsoleColor"/>.
     /// </returns>
-    public static ConsoleColor Color()
+    public static ConsoleColor ConsoleColor()
         => (ConsoleColor)rng.Next(0, 16);
 
     /// <summary>
     ///     Get a random console color excluding <paramref name="exceptions"/>.
     /// </summary>
     /// <returns>
-    ///     Returns a random <see cref="ConsoleColor"/>.
+    ///     Returns a random <see cref="System.ConsoleColor"/>.
     /// </returns>
-    public static ConsoleColor ColorExcept(params ConsoleColor[] exceptions)
+    public static ConsoleColor ConsoleColorExcept(params ConsoleColor[] exceptions)
     {
         var values = new List<ConsoleColor>(Enum.GetValues<ConsoleColor>());
         foreach (var exception in exceptions)

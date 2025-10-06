@@ -26,7 +26,7 @@ public class TerminalGame
     //               Code must finish within the alloted time frame for this to work well.
     public void Execute()
     {
-        Terminal.ForegroundColor = Random.ColorExcept(ConsoleColor.Black);
+        Terminal.ForegroundColor = Random.ConsoleColorExcept(ConsoleColor.Black);
         //Terminal.Write(Time.DisplayText);
         //Terminal.ClearLine();
         Terminal.WriteLine("asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh asdkjash h hkjhh ");

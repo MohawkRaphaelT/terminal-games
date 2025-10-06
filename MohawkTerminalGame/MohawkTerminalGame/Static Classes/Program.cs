@@ -14,6 +14,11 @@ internal class Program
     private static int targetFPS = 20;
     private static TerminalExecuteMode terminalMode = TerminalExecuteMode.ExecuteOnce;
 
+    /// <summary>
+    ///     The target frames per second the terminal aims to run at.
+    ///     Note that frame timing is somewhat inconsistent
+    ///     (off by a few milliseconds each frame).
+    /// </summary>
     public static int TargetFPS
     {
         get
@@ -28,6 +33,10 @@ internal class Program
             gameLoopTimer.Interval = 1000.0 / targetFPS;
         }
     }
+
+    /// <summary>
+    ///     How the <see cref="TerminalGame.Execute"/> function is run.
+    /// </summary>
     public static TerminalExecuteMode TerminalExecuteMode
     {
         get

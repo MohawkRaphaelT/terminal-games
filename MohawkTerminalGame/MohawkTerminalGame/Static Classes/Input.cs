@@ -9,31 +9,66 @@ public static class Input
     private readonly static List<ConsoleKey> LastFrameKeys = [];
     private readonly static List<ConsoleKey> CurrentFrameKeys = [];
 
-    public static void PreparePollNextInput()
+    /// <summary>
+    ///     Called to reset current frame inputs.
+    ///     Don't call this unless you have a reason to.
+    /// </summary>
+    internal static void PreparePollNextInput()
     {
         LastFrameKeys.Clear();
         LastFrameKeys.AddRange(CurrentFrameKeys);
         CurrentFrameKeys.Clear();
     }
 
+    /// <summary>
+    ///     Checks to see if the <paramref name="key"/> is not pressed.
+    /// </summary>
+    /// <param name="key">The key to check.</param>
+    /// <returns>
+    ///     True if key is not pressed.
+    /// </returns>
     public static bool IsKeyUp(ConsoleKey key)
     {
         // Up if not currently pressed
         bool state = !CurrentFrameKeys.Contains(key);
         return state;
     }
+
+    /// <summary>
+    ///     Checks to see if the <paramref name="key"/> is pressed down.
+    /// </summary>
+    /// <param name="key">The key to check.</param>
+    /// <returns>
+    ///     True if key is pressed down.
+    /// </returns>
     public static bool IsKeyDown(ConsoleKey key)
     {
         // Down if currently pressed
         bool state = CurrentFrameKeys.Contains(key);
         return state;
     }
+
+    /// <summary>
+    ///     Checks to see if the <paramref name="key"/> was pressed down this frame.
+    /// </summary>
+    /// <param name="key">The key to check.</param>
+    /// <returns>
+    ///     True if key was pressed down this frame.
+    /// </returns>
     public static bool IsKeyPressed(ConsoleKey key)
     {
         // Pressed if currently pressed down but was previously unpressed
         bool state = CurrentFrameKeys.Contains(key) && !LastFrameKeys.Contains(key);
         return state;
     }
+
+    /// <summary>
+    ///     Checks to see if the <paramref name="key"/> was released this frame.
+    /// </summary>
+    /// <param name="key">The key to check.</param>
+    /// <returns>
+    ///     True if key was released this frame.
+    /// </returns>
     public static bool IsKeyReleased(ConsoleKey key)
     {
         // Released if currently unpressed but was previously pressed down
@@ -41,7 +76,10 @@ public static class Input
         return state;
     }
 
-    public static void InitInputThread()
+    /// <summary>
+    ///     Initialize background input thread.
+    /// </summary>
+    internal static void InitInputThread()
     {
         // Only run once
         if (InputThread != null)
@@ -69,6 +107,7 @@ public static class Input
                 }
             }
         }
+
         Thread inputThread = new(ThreadPollKeyboard);
         inputThread.Start();
         return inputThread;

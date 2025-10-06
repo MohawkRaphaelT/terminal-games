@@ -26,6 +26,19 @@ public struct Rectangle
         this.h = h;
     }
 
+    /// <summary>
+    ///     Create a rectangle from 2 opposite corners (upper-left and lower-right).
+    /// </summary>
+    /// <param name="x1">Upper left X coordinate.</param>
+    /// <param name="y1">Upper left Y coordinate.</param>
+    /// <param name="x2">Lower right X coordinate.</param>
+    /// <param name="y2">Lower right Y coordinate.</param>
+    /// <returns>
+    ///     A rectangled from the specified corners.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown if coordinate values are less than zero.
+    /// </exception>
     public static Rectangle FromCorners(int x1, int y1, int x2, int y2)
     {
         // Lower bounds for X1
@@ -62,6 +75,21 @@ public struct Rectangle
         };
         return rectangle;
     }
+
+    /// <summary>
+    ///     Creates a rectangle from a centre point.
+    /// </summary>
+    /// <param name="x">The central X coordinate.</param>
+    /// <param name="y">The central Y coordinate.</param>
+    /// <param name="w">The rectangle width.</param>
+    /// <param name="h">The rectangle height.</param>
+    /// <returns>
+    ///     A rectangled from the specified coordinates.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown if centre coordinates are less than zero, and
+    ///     thrown if dimensions are less than or equal to zero.
+    /// </exception>
     public static Rectangle FromCentre(int x, int y, int w, int h)
     {
         // Lower bounds for X
