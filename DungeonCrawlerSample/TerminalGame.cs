@@ -22,7 +22,7 @@
             Program.TerminalInputMode = TerminalInputMode.EnableInputDisableReadLine;
             Program.TargetFPS = 60;
             // Prepare some terminal settings
-            Terminal.SetTitle("Title");
+            Terminal.SetTitle("Dungeon Crawler Sample");
             Terminal.CursorVisible = false; // hide cursor
 
             // Set map to some values

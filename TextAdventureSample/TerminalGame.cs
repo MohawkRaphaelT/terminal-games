@@ -13,6 +13,7 @@ namespace MohawkTerminalGame
             Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteLoop;
             Program.TerminalInputMode = TerminalInputMode.KeyboardReadAndReadLine;
 
+            Terminal.SetTitle("Text Adventure Sample");
             Terminal.RoboTypeIntervalMilliseconds = 50; // 50 milliseconds
             Terminal.UseRoboType = true; // use slow character typing
             Terminal.WriteWithWordBreaks = true; // donbreak around wors, don't cut them off
