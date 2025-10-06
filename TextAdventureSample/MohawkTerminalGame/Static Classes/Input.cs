@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Input related functions.
@@ -104,6 +104,9 @@ namespace TextAdventureSample
             {
                 while (true)
                 {
+                    if (Program.TerminalInputMode != TerminalInputMode.BackgroundPollingNoReadLine)
+                        continue;
+
                     ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
                     if (consoleKeyInfo.Key != ConsoleKey.None)
                     {
@@ -114,7 +117,6 @@ namespace TextAdventureSample
 
             Thread inputThread = new(ThreadPollKeyboard);
             inputThread.Priority = ThreadPriority.Highest;
-            Console.WriteLine("input " + inputThread.ManagedThreadId);
             inputThread.Start();
             return inputThread;
         }

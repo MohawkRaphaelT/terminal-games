@@ -1,4 +1,4 @@
-﻿namespace TextAdventureSample
+﻿namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Execution mode for <see cref="TerminalGame"/>.

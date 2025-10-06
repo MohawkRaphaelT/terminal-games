@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Rectangle for manipulating areas for <see cref="TerminalGrid"/>.

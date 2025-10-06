@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     A utility class built on top of <see cref="Console"/>.

@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "Not needed for what we're doing.", Scope = "namespace", Target = "~N:TextAdventureSample")]
+[assembly: SuppressMessage("Style", "IDE0130:Namespace does not match folder structure", Justification = "Not needed for what we're doing.", Scope = "namespace", Target = "~N:MohawkTerminalGame")]

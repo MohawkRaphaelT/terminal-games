@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     public struct ColoredText
     {

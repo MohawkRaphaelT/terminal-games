@@ -2,7 +2,7 @@
 using System.Text;
 using System.Timers;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     The underlying program. 🤫
@@ -52,6 +52,8 @@ namespace TextAdventureSample
                 terminalMode = value;
             }
         }
+
+        public static TerminalInputMode TerminalInputMode { get; set; }
 
         static void Main(string[] args)
         {
@@ -109,7 +111,7 @@ namespace TextAdventureSample
                         gameLoopTimer.Elapsed -= GameLoopTimerEvents;
                         break;
                     default:
-                        string msg = $"{nameof(TextAdventureSample.TerminalExecuteMode)}{TerminalExecuteMode}";
+                        string msg = $"{nameof(MohawkTerminalGame.TerminalExecuteMode)}{TerminalExecuteMode}";
                         throw new NotImplementedException(msg);
                 }
             }

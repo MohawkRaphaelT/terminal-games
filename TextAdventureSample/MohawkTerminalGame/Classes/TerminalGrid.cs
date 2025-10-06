@@ -1,4 +1,4 @@
-﻿namespace TextAdventureSample
+﻿namespace MohawkTerminalGame
 {
     /// <summary>
     ///     

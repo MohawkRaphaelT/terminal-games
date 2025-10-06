@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TextAdventureSample
+namespace MohawkTerminalGame
 {
     internal class TerminalGridWithColor : TerminalGridBase<ColoredText>
     {
