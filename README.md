@@ -51,8 +51,8 @@ Note that it is on you to choose the configuration. The two sample projects prov
 
 ### Sample Projects
 
-* [See Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/v1.0/DungeonCrawlerSample).
-* [See Text Adventure sample](https://github.com/MohawkRaphaelT/terminal-games/tree/v1.0/TextAdventureSample).
+* [See Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/main/DungeonCrawlerSample).
+* [See Text Adventure sample](https://github.com/MohawkRaphaelT/terminal-games/tree/main/TextAdventureSample).
 
 ### About Real-Time Terminal Games
 
@@ -62,11 +62,11 @@ Moreover, event at a consistent rate, the games timing isn't perfect, with reach
 
 ### Provided Utilities
 
-I recommend having a look at the code files in the [template sub-folder](https://github.com/MohawkRaphaelT/terminal-games/tree/v1.0/MohawkTerminalGame/MohawkTerminalGame). There are a number of files meant to help remove grunt-work from common effects.
+I recommend having a look at the code files in the [template sub-folder](https://github.com/MohawkRaphaelT/terminal-games/tree/main/MohawkTerminalGame/MohawkTerminalGame). There are a number of files meant to help remove grunt-work from common effects.
 
-In particular, [Terminal.cs](https://github.com/MohawkRaphaelT/terminal-games/blob/v1.0/MohawkTerminalGame/MohawkTerminalGame/Static%20Classes/Terminal.cs) is meant to be a full replacement of Console with a number of bells and whistles. Specifically, it can properly handle text wrapping, simple overloads for writing text with colors, and having cinema-esque computer typing rather than direct words dumps via Write/WriteLine.
+In particular, [Terminal.cs](https://github.com/MohawkRaphaelT/terminal-games/blob/main/MohawkTerminalGame/MohawkTerminalGame/Static%20Classes/Terminal.cs) is meant to be a full replacement of Console with a number of bells and whistles. Specifically, it can properly handle text wrapping, simple overloads for writing text with colors, and having cinema-esque computer typing rather than direct words dumps via Write/WriteLine.
 
-There is a TerminalGrid and TerminalGridWithColor classes that are meant to help set up maps/levels in a terminal game. The [Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/v1.0/DungeonCrawlerSample) showcases this, and how to be performant given the limitations. While not shown, the grid comes with functions to draw rectangles and circles of characters to the grid which might be handy.
+There is a TerminalGrid and TerminalGridWithColor classes that are meant to help set up maps/levels in a terminal game. The [Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/main/DungeonCrawlerSample) showcases this, and how to be performant given the limitations. While not shown, the grid comes with functions to draw rectangles and circles of characters to the grid which might be handy.
 
 ### Exiting
 
