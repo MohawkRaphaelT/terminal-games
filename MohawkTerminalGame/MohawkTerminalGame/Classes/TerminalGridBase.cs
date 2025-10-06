@@ -1,5 +1,4 @@
-﻿using System.Dynamic;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text;
 
 namespace MohawkTerminalGame;
@@ -12,29 +11,47 @@ public class TerminalGridBase<T>
     protected readonly T[,] BackingArray;
     protected readonly StringBuilder stringBuilder = new();
 
-    //public string this[int x, int y]
-    //{
-    //    get => BackingArray[x, y];
-    //    set => BackingArray[x, y] = value;
-    //}
-
+    /// <summary>
+    ///     Grid width in column values (values can be multiple columns / characters).
+    /// </summary>
     public int Width { get; init; }
+    
+    /// <summary>
+    ///     Grid height in rows.
+    /// </summary>
     public int Height { get; init; }
+
+    /// <summary>
+    ///     Default value to set grid to and reset to.
+    /// </summary>
     public T DefaultValue { get; set; }
 
-
+    /// <summary>
+    ///     Create a grid size of screen with <paramref name="defaultValue"/>.
+    /// </summary>
+    /// <param name="defaultValue">The default value to set all elements to and reset to.</param>
     public TerminalGridBase(T defaultValue) : this(Terminal.WindowWidth, Terminal.WindowHeight, defaultValue)
     {
     }
-    public TerminalGridBase(int widthInChars, int heightInChars, T defaultValue)
+
+    /// <summary>
+    ///     Create a grid size (<paramref name="widthInValues"/>, <paramref name="heightInRows"/>) with <paramref name="defaultValue"/>.
+    /// </summary>
+    /// <param name="widthInValues">Width in values (values can be multiple columns / characters).</param>
+    /// <param name="heightInRows">Height in rows.</param>
+    /// <param name="defaultValue">The default value to set all elements to and reset to.</param>
+    public TerminalGridBase(int widthInValues, int heightInRows, T defaultValue)
     {
-        Width = widthInChars;
-        Height = heightInChars;
-        BackingArray = new T[widthInChars, heightInChars];
+        Width = widthInValues;
+        Height = heightInRows;
+        BackingArray = new T[widthInValues, heightInRows];
         DefaultValue = defaultValue;
         SetAll(defaultValue);
     }
 
+    /// <summary>
+    ///     Reset the grid to the default value.
+    /// </summary>
     public void Reset()
     {
         SetAll(DefaultValue);
@@ -53,6 +70,14 @@ public class TerminalGridBase<T>
         Console.Write(value);
     }
 
+    /// <summary>
+    ///     Get the value in the grid at position (<paramref name="x"/>, <paramref name="y"/>).
+    /// </summary>
+    /// <param name="x">The x coordinate within the grid.</param>
+    /// <param name="y">The y coordinate within the grid.</param>
+    /// <returns>
+    ///     The value at that position.
+    /// </returns>
     public T Get(int x, int y)
     {
         T value = BackingArray[x, y];
@@ -60,9 +85,9 @@ public class TerminalGridBase<T>
     }
 
     /// <summary>
-    /// 
+    ///     Set all values in table to <paramref name="value"/>.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value to assign.</param>
     public void SetAll(T value)
     {
         for (int y = 0; y < Height; y++)
@@ -75,10 +100,10 @@ public class TerminalGridBase<T>
     }
 
     /// <summary>
-    /// 
+    ///     Set all values in <paramref name="row"/> to <paramref name="value"/>.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="row"></param>
+    /// <param name="value">The value to assign.</param>
+    /// <param name="row">The row to set.</param>
     public void SetRow(T value, int row)
     {
         // Ignore malformed request
@@ -93,28 +118,28 @@ public class TerminalGridBase<T>
     }
 
     /// <summary>
-    /// 
+    ///     Set all values in <paramref name="column"/> to <paramref name="value"/>.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="col"></param>
-    public void SetCol(T value, int col)
+    /// <param name="value">The value to assign.</param>
+    /// <param name="column">The column to set.</param>
+    public void SetCol(T value, int column)
     {
         // Ignore malformed request
-        if (col < 0 || col >= Width)
+        if (column < 0 || column >= Width)
             return;
 
         // Set row
         for (int y = 0; y < Height; y++)
         {
-            BackingArray[col, y] = value;
+            BackingArray[column, y] = value;
         }
     }
 
     /// <summary>
-    /// 
+    ///     Set all values in <paramref name="area"/> to <paramref name="value"/>.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="area"></param>
+    /// <param name="value">The value to assign.</param>
+    /// <param name="area">The area to set.</param>
     public void SetRectangle(T value, Rectangle area)
     {
         int minX = int.Max(area.StartX, 0);
@@ -130,9 +155,24 @@ public class TerminalGridBase<T>
         }
     }
 
+    /// <summary>
+    ///     Set all values in defined rectangle area to <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The value to assign.</param>
+    /// <param name="x">The rectangle's upper left x coordinate.</param>
+    /// <param name="y">The rectangle's upper left y coordinate.</param>
+    /// <param name="w">The rectangle's width.</param>
+    /// <param name="h">The rectangle's height.</param>
     public void SetRectangle(T value, int x, int y, int w, int h)
         => SetRectangle(value, new Rectangle(x, y, w, h));
 
+    /// <summary>
+    ///     Set all values in defined circle arez to <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The value to assign.</param>
+    /// <param name="cx">The circle's centre x coordinate.</param>
+    /// <param name="cy">The circle's centre y coordinate</param>
+    /// <param name="r">The ridcles radius.</param>
     public void SetCircle(T value, int cx, int cy, float r)
     {
         int minX = int.Max((int)Math.Floor(cx - r), 0);
@@ -198,15 +238,17 @@ public class TerminalGridBase<T>
     }
 
     /// <summary>
-    ///     
+    ///     Copy <paramref name="srcRect"/> from <paramref name="srcRect"/> to <paramref name="dest"/>
+    ///     at location (<paramref name="destX"/>,<paramref name="destY"/>).
     /// </summary>
-    /// <param name="src"></param>
-    /// <param name="srcRect"></param>
-    /// <param name="dest"></param>
-    /// <param name="destX"></param>
-    /// <param name="destY"></param>
+    /// <param name="src">The source grid to copy.</param>
+    /// <param name="srcRect">The source rectangle to copy from <paramref name="src"/>.</param>
+    /// <param name="dest">The destination grid.</param>
+    /// <param name="destX">The desintation's upper left x coordinate.</param>
+    /// <param name="destY">The desintation's upper left y coordinate.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// 
+    ///     Thrown if <paramref name="srcRect"/> bounds are incorrect (either initial coordinate
+    ///     is negative or upper bounds are larger than <paramref name="srcRect"/>.
     /// </exception>
     public static void CopyFromTo(TerminalGridBase<T> src, Rectangle srcRect, TerminalGridBase<T> dest, int destX, int destY)
     {
@@ -238,11 +280,11 @@ public class TerminalGridBase<T>
     }
 
     /// <summary>
-    ///     
+    ///     Copy <paramref name="area"/> from self to self at (<paramref name="newX"/>, <paramref name="newY"/>).
     /// </summary>
-    /// <param name="area"></param>
-    /// <param name="newX"></param>
-    /// <param name="newY"></param>
+    /// <param name="area">The area to copy.</param>
+    /// <param name="newX">The desintation's upper left x coordinate.</param>
+    /// <param name="newY">The desintation's upper left y coordinate.</param>
     public void CopyToSelf(Rectangle area, int newX, int newY) => CopyFromTo(this, area, this, newX, newY);
 
     public override string ToString()
@@ -260,18 +302,29 @@ public class TerminalGridBase<T>
         return result;
     }
 
+    /// <summary>
+    ///     Write this grid to the terminal.
+    /// </summary>
     public virtual void Write()
     {
         string display = this.ToString();
         Terminal.Write(display);
     }
 
+    /// <summary>
+    ///     Write this grid to the terminal at (<paramref name="x"/>, <paramref name="y"/>).
+    /// </summary>
+    /// <param name="x">The current screen's x coordinate (column).</param>
+    /// <param name="y">The current screen's y coordinate (row).</param>
     public void Overwrite(int x = 0, int y = 0)
     {
         Terminal.SetCursorPosition(x, y);
         Write();
     }
 
+    /// <summary>
+    ///     Clear the screen then write the grid to the terminal.
+    /// </summary>
     public void ClearWrite()
     {
         Terminal.Clear();
