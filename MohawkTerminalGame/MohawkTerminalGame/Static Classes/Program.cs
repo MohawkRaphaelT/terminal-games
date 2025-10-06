@@ -101,6 +101,7 @@ internal class Program
                         {
                             CanGameExecuteTick = false;
                             game.Execute();
+                            Input.PreparePollNextInput();
                         }
                     }
                     gameLoopTimer.Stop();

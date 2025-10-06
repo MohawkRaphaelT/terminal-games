@@ -1,11 +1,12 @@
-﻿namespace MohawkTerminalGame;
+﻿
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Input related functions.
 /// </summary>
 public static class Input
 {
-    private readonly static Thread InputThread = CreateInputThread();
+    private readonly static Thread InputThread;
     private readonly static List<ConsoleKey> LastFrameKeys = [];
     private readonly static List<ConsoleKey> CurrentFrameKeys = [];
 
@@ -109,6 +110,8 @@ public static class Input
         }
 
         Thread inputThread = new(ThreadPollKeyboard);
+        inputThread.Priority = ThreadPriority.Highest;
+        Console.WriteLine("input " + inputThread.ManagedThreadId);
         inputThread.Start();
         return inputThread;
     }
