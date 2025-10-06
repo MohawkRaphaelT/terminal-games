@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text;
 
-namespace DungeonCrawlerSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     A grid of strings for easy addressing and writing.

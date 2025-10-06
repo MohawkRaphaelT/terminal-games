@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading;
-
-namespace DungeonCrawlerSample
+﻿namespace MohawkTerminalGame
 {
     /// <summary>
     ///     A utility class built on top of <see cref="Console"/>.

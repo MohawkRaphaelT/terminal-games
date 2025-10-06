@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Timers;
 
-namespace DungeonCrawlerSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     The underlying program. 🤫
@@ -108,7 +108,7 @@ namespace DungeonCrawlerSample
                         gameLoopTimer.Elapsed -= GameLoopTimerEvents;
                         break;
                     default:
-                        string msg = $"{nameof(DungeonCrawlerSample.TerminalExecuteMode)}{TerminalExecuteMode}";
+                        string msg = $"{nameof(MohawkTerminalGame.TerminalExecuteMode)}{TerminalExecuteMode}";
                         throw new NotImplementedException(msg);
                 }
             }

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace DungeonCrawlerSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Generate random values.

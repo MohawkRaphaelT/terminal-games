@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace DungeonCrawlerSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Time related information.

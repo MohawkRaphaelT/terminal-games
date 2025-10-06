@@ -1,4 +1,4 @@
-﻿namespace DungeonCrawlerSample
+﻿namespace MohawkTerminalGame
 {
     public class TerminalGame
     {

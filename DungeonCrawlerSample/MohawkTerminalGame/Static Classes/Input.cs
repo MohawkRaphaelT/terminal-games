@@ -1,5 +1,5 @@
 ﻿
-namespace DungeonCrawlerSample
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     Input related functions.
