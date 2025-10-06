@@ -15,7 +15,7 @@ Users of Windows 10 need to do a few steps to setup to be on-par with Windows 11
 5. In the "Default Terminal Application" dropdown, select "Windows Terminal."
 6. Press "ok."
 
-![config-windows-terminal](.\res\config windows terminal.png)
+![config-windows-terminal](https://github.com/MohawkRaphaelT/terminal-games/blob/main/res/config%20windows%20terminal.png)
 
 You can test that things work by running the console application again.
 
@@ -29,19 +29,19 @@ You can configure a number of parameters in Windows Terminal. Here are 3 things 
 
 You can configure the number of rows and columns the terminal window has on startup.
 
-![windows terminal startup size](.\res\windows terminal startup size.png)
+![windows terminal startup size](https://github.com/MohawkRaphaelT/terminal-games/blob/main/res/windows%20terminal%20startup%20size.png)
 
 ### 2. Startup Type
 
 You can choose how the window opens, whether it be normal or maximized (full-screen).
 
-![windows terminal startup type](.\res\windows terminal startup type.png)
+![windows terminal startup type](https://github.com/MohawkRaphaelT/terminal-games/blob/main/res/windows%20terminal%20startup%20type.png)
 
 ### 3. Renderer
 
 You can choose the renderer for Windows Terminal. If you seek performance, you should use the more modern renderer.
 
-![windows terminal renderer](.\res\windows terminal renderer.png)
+![windows terminal renderer](https://github.com/MohawkRaphaelT/terminal-games/blob/main/res/windows%20terminal%20renderer.png)
 
 # About This Project Template
 
