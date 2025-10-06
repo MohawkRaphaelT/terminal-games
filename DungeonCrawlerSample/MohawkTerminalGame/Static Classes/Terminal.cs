@@ -1,4 +1,7 @@
-﻿namespace MohawkTerminalGame
+﻿using System;
+using System.Threading;
+
+namespace MohawkTerminalGame
 {
     /// <summary>
     ///     A utility class built on top of <see cref="Console"/>.
@@ -6,7 +9,6 @@
     public static class Terminal
     {
         private static bool isCursorVisible = true;
-        private static readonly object ConsoleLock = new();
 
         private delegate void WriteAction(string value);
         private delegate void WriteObjAction(object obj);

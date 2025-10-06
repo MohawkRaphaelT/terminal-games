@@ -11,7 +11,7 @@ namespace MohawkTerminalGame
         public void Setup()
         {
             Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteLoop;
-            Program.TerminalInputMode = TerminalInputMode.KeyboardReadAndReadLine;
+            Program.TerminalInputMode = TerminalInputMode.EnableInputDisableReadLine;
 
             Terminal.RoboTypeIntervalMilliseconds = 50; // 50 milliseconds
             Terminal.UseRoboType = true; // use slow character typing

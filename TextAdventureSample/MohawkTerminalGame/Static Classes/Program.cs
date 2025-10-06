@@ -53,7 +53,7 @@ namespace MohawkTerminalGame
             }
         }
 
-        public static TerminalInputMode TerminalInputMode { get; set; }
+        public static TerminalInputMode TerminalInputMode { get; set; } = TerminalInputMode.KeyboardReadAndReadLine;
 
         static void Main(string[] args)
         {

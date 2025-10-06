@@ -9,6 +9,7 @@ public class TerminalGame
     public void Setup()
     {
         Program.TerminalExecuteMode = TerminalExecuteMode.ExecuteOnce;
+        Program.TerminalInputMode = TerminalInputMode.EnableInputDisableReadLine;
     }
 
     // Execute() runs based on Program.TerminalExecuteMode (assign to it in Setup).

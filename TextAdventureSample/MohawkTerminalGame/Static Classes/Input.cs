@@ -104,7 +104,7 @@ namespace MohawkTerminalGame
             {
                 while (true)
                 {
-                    if (Program.TerminalInputMode != TerminalInputMode.BackgroundPollingNoReadLine)
+                    if (Program.TerminalInputMode != TerminalInputMode.EnableInputDisableReadLine)
                         continue;
 
                     ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();

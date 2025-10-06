@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Timers;
 
 namespace MohawkTerminalGame
@@ -51,6 +52,8 @@ namespace MohawkTerminalGame
                 terminalMode = value;
             }
         }
+
+        public static TerminalInputMode TerminalInputMode { get; set; } = TerminalInputMode.KeyboardReadAndReadLine;
 
         static void Main(string[] args)
         {

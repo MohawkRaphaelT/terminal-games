@@ -1,4 +1,7 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+
 namespace MohawkTerminalGame
 {
     /// <summary>
@@ -101,6 +104,9 @@ namespace MohawkTerminalGame
             {
                 while (true)
                 {
+                    if (Program.TerminalInputMode != TerminalInputMode.EnableInputDisableReadLine)
+                        continue;
+
                     ConsoleKeyInfo consoleKeyInfo = Console.ReadKey();
                     if (consoleKeyInfo.Key != ConsoleKey.None)
                     {
@@ -111,7 +117,6 @@ namespace MohawkTerminalGame
 
             Thread inputThread = new(ThreadPollKeyboard);
             inputThread.Priority = ThreadPriority.Highest;
-            Console.WriteLine("input " + inputThread.ManagedThreadId);
             inputThread.Start();
             return inputThread;
         }
