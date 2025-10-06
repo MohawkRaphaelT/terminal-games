@@ -1,4 +1,6 @@
-﻿namespace MohawkTerminalGame;
+﻿using System;
+
+namespace MohawkTerminalGame;
 
 /// <summary>
 ///     Rectangle for manipulating areas for <see cref="TerminalGrid"/>.

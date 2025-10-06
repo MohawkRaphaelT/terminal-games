@@ -1,4 +1,6 @@
-﻿namespace MohawkTerminalGame;
+﻿using System;
+
+namespace MohawkTerminalGame;
 
 internal class TerminalGridWithColor : TerminalGridBase<ColoredText>
 {
