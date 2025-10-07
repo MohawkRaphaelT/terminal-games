@@ -80,4 +80,4 @@ By popular demand, I have added a new sample project which ports over the Audio 
 * `MohawkTerminalGame/Structs/Music`
 * `MohawkTerminalGame/Structs/Sound`
 
-You would also need to install the Raylib_cs NuGet package. To do so, go to Project > Manage NuGet Packages... then under the Browse tab search for [Raylib-cs](https://www.nuget.org/packages/Raylib-cs/7.0.1?_src=template) and install the latest package (as of this writing, 7.0.1).
+You would also need to install the Raylib-cs NuGet package. To do so, in Visual Studio, go to `Project > Manage NuGet Packages...` then under the Browse tab search for [Raylib-cs](https://www.nuget.org/packages/Raylib-cs/7.0.1?_src=template) and install the latest package (as of this writing, 7.0.1).
