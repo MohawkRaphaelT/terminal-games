@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Text.Unicode;
-
-namespace MohawkTerminalGame
+﻿namespace MohawkTerminalGame
 {
     public class TerminalGame
     {
