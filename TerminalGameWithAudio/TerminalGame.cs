@@ -23,10 +23,11 @@ namespace MohawkTerminalGame
             Audio.Initialize();
             // Load audio files. This must happen AFTER initializing audio.
             // If you are so inclined, you can move Audio.Initialize() into Program beside Input.InitInputThread()
-            bgm = Audio.LoadMusic("../../../../assets/audio/country.mp3");
             sfx1 = Audio.LoadSound("../../../../assets/audio/sound.wav");
             sfx2 = Audio.LoadSound("../../../../assets/audio/target.ogg");
             sfx3 = Audio.LoadSound("../../../../assets/audio/boom.wav");
+            bgm = Audio.LoadMusic("../../../../assets/audio/country.mp3");
+            bgm.Looping = true;
             // Move curosr to overwrite previously drawn (black) text
             Terminal.SetCursorPosition(0, 0);
             Terminal.ResetColor();
