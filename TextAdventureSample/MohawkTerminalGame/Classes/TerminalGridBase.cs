@@ -16,7 +16,7 @@ public class TerminalGridBase<T>
     ///     Grid width in column values (values can be multiple columns / characters).
     /// </summary>
     public int Width { get; init; }
-    
+
     /// <summary>
     ///     Grid height in rows.
     /// </summary>
@@ -83,6 +83,15 @@ public class TerminalGridBase<T>
     {
         T value = BackingArray[x, y];
         return value;
+    }
+
+    /// <summary>
+    ///     Set all values in table to <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The value to assign.</param>
+    public void Set(T value, int x, int y)
+    {
+        BackingArray[x, y] = value;
     }
 
     /// <summary>
