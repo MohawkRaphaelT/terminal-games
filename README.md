@@ -76,6 +76,7 @@ As a final note, CTRL+C is a universal key combination to force-exit a terminal 
 
 By popular demand, I have added a new sample project which ports over the Audio library from the MophawkGame2D framework almost 1:1. See the [Terminal Game With Audio](https://github.com/MohawkRaphaelT/terminal-games/tree/main/TerminalGameWithAudio) for implementation details. The new files (if you want to copy/paste) are the following.
 
+* `MohawkTerminalGame/Attributes/OmitFromDocumentation.cs`
 * `MohawkTerminalGame/Static Classes/Audio`
 * `MohawkTerminalGame/Structs/Music`
 * `MohawkTerminalGame/Structs/Sound`
