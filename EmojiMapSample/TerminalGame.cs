@@ -9,11 +9,13 @@ namespace MohawkTerminalGame
 
         // Place your variables here
         TerminalGrid map;
-        const string tree1 = "🌲"; // 
-        const string tree2 = "🌳";
-        const string house = "🏚";
-        const string water = "🌊";
-        const string mountain = "⛰ "; // mountain is 1 wide
+        Stack<ConsoleColor> fgColors = [];
+        Stack<ConsoleColor> bgColors = [];
+        const string tree1 = "🌲"; // 2 wide
+        const string tree2 = "🌳"; // 2 wide
+        const string house = "🏚 "; // 1 wide
+        const string water = "🌊"; // 2 wide
+        const string mountain = "⛰ "; // 1 wide
         const string sparkle = "✨";
         const string player1 = "🧑";
         const string player2 = "👧";
@@ -38,11 +40,13 @@ namespace MohawkTerminalGame
             Terminal.SetTitle("Dungeon Crawler Sample");
             Terminal.CursorVisible = false; // hide cursor
 
-            //
+            // Choose randmo player icon
             player = Random.Element(player1, player2);
 
             // Set map to some values
-            map = new(Width, Height, "..");
+            map = new(Width, Height, "XX");
+
+            // Set up forest
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -52,15 +56,34 @@ namespace MohawkTerminalGame
                 }
             }
 
-            int numMountains = (int)MathF.Sqrt(Width * Height) * 10;
+            // Add some random mountain clusters
+            int numMountains = (int)MathF.Sqrt(Width * Height) * 4;
             for (int i = 0; i < numMountains; i++)
             {
                 int x = Random.Integer(0, Width);
                 int y = Random.Integer(0, Height);
-                map.Set(mountain, x, y);
+                int r = Random.Element(0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2);
+                map.SetCircle(mountain, x, y, r);
+            }
+
+            // Clear an area in the middle
+            int radius = 10;
+            int midX = Width / 2;
+            int midY = Height / 2;
+            map.SetCircle("  ", midX, midY, radius);
+
+            // Draw some houses in that centre area
+            int numHouses = Random.Integer(20, 40);
+            for (int i = 0; i < numHouses; i++)
+            {
+                int r = radius * 2 / 3;
+                int x = Random.Integer(midX - r, midX + r);
+                int y = Random.Integer(midY - r, midY + r);
+                map.Set(house, x, y);
             }
 
             // Clear window and draw map
+            Terminal.BackgroundColor = ConsoleColor.DarkGreen;
             map.ClearWrite();
             // Draw player. x2 because my tileset is 2 columns wide.
             DrawCharacter(playerX, playerY, player);
@@ -83,16 +106,18 @@ namespace MohawkTerminalGame
             // Only move player if needed
             if (inputChanged)
             {
-                //ResetCell(oldPlayerX, oldPlayerY);
-                map.Overwrite();
+                ResetCell(oldPlayerX, oldPlayerY);
                 DrawCharacter(playerX, playerY, player);
                 inputChanged = false;
             }
 
             // Write time below game
-            Terminal.SetCursorPosition(0, Height - 1);
+            Terminal.SetCursorPosition(0, Height);
+            PushTerminalColors();
             Terminal.ResetColor();
+            Terminal.ClearLine();
             Terminal.Write(Time.DisplayText);
+            PopTerminalColors();
         }
 
         void CheckMovePlayer()
@@ -129,6 +154,20 @@ namespace MohawkTerminalGame
             string mapText = map.Get(x, y);
             // Player and grid are 2-width characters
             map.Poke(x * 2, oldPlayerY, mapText);
+        }
+
+        void PushTerminalColors()
+        {
+            fgColors.Push(Terminal.ForegroundColor);
+            bgColors.Push(Terminal.BackgroundColor);
+        }
+
+        void PopTerminalColors()
+        {
+            if (fgColors.Count > 0)
+                Terminal.ForegroundColor = fgColors.Pop();
+            if (bgColors.Count > 0)
+                Terminal.BackgroundColor = bgColors.Pop();
         }
 
     }
