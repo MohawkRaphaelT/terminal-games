@@ -1,8 +1,9 @@
 # Windows Terminal ANSI-compatible commands
 
-A useful resource though not all work.
+Resources
 
-* https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
+* A useful resource though not all work. https://www2.ccs.neu.edu/research/gpc/VonaUtils/vona/terminal/vtansi.htm
+* Further explanation of what attributes would be expected. https://en.wikipedia.org/wiki/ANSI_escape_code#Select_Graphic_Rendition_parameters
 
 Commands I've seen work.
 
