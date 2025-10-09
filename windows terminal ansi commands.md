@@ -1,4 +1,4 @@
-# Windows Terminal xterm-compatible commands
+# Windows Terminal ANSI-compatible commands
 
 A useful resource though not all work.
 
