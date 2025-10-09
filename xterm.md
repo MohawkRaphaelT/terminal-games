@@ -22,7 +22,7 @@ Commands I've seen work.
   * 0 reset attribute (`m` is the attribute marker)
   * 1 bright text, 2 dim text
     * NOTE: you can combine dim and bright for a shade lighter than dim, but dimmer than standard
-  * 3 italicied text
+  * 3 italicized text
   * 4 underlined text
   * 5/6 blinking text
   * 7 reverse fg and bg colors (doesn't swap, directly uses the inverse color)
