@@ -2,7 +2,7 @@
 
 This repository contains samples and some utility code to help you make terminal games for the Fall 2025 Mohawk College Game Design Design Week challenge.
 
-Team do not need to use this code, but it solves a number of challenges teams might face. You can ask questions and report issues on the [issues page](https://github.com/MohawkRaphaelT/terminal-games/issues) in this GitHub repository.
+Teams do not need to use this code, but it solves a number of challenges teams might face. You can ask questions and report issues on the [issues page](https://github.com/MohawkRaphaelT/terminal-games/issues) in this GitHub repository.
 
 # Windows 10 Setup
 
@@ -10,7 +10,7 @@ Users of Windows 10 need to do a few steps to setup to be on-par with Windows 11
 
 1. Go to the Microsoft Store on your Windows 10 machine and look for "Windows Terminal" or navigate to [Windows Terminal page in your browser](https://apps.microsoft.com/detail/9n0dx20hk701?hl=en-GB&gl=CA).
 2. Download and install Windows Terminal.
-3. Run any console application in Visual Studio. In the window that opens, right-click the window and select Properties.
+3. Run any console application in Visual Studio. In the window that opens, right-click the window title bar and select Properties.
 4. Navigate to the "Terminal" tab.
 5. In the "Default Terminal Application" dropdown, select "Windows Terminal."
 6. Press "ok."
@@ -58,15 +58,15 @@ Note that it is on you to choose the configuration. The two sample projects prov
 
 Note that while you can aim to run at 60 FPS, clearing and writing the screen every "frame" is slow. Overwriting text by moving the cursor is much quicker.
 
-Moreover, event at a consistent rate, the games timing isn't perfect, with reach frame deviating by 2-15 milliseconds depending on unknown factors.
+Moreover, even at a consistent rate, the game's timing isn't perfect, with each frame deviating by 2-15 milliseconds depending on unknown factors.
 
 ### Provided Utilities
 
-I recommend having a look at the code files in the [template sub-folder](https://github.com/MohawkRaphaelT/terminal-games/tree/main/MohawkTerminalGame/MohawkTerminalGame). There are a number of files meant to help remove grunt-work from common effects.
+I recommend having a look at the code files in the [template sub-folder](https://github.com/MohawkRaphaelT/terminal-games/tree/main/MohawkTerminalGame/MohawkTerminalGame). There are a number of files meant to help remove grunt-work for common effects.
 
-In particular, [Terminal.cs](https://github.com/MohawkRaphaelT/terminal-games/blob/main/MohawkTerminalGame/MohawkTerminalGame/Static%20Classes/Terminal.cs) is meant to be a full replacement of Console with a number of bells and whistles. Specifically, it can properly handle text wrapping, simple overloads for writing text with colors, and having cinema-esque computer typing rather than direct words dumps via Write/WriteLine.
+In particular, [Terminal.cs](https://github.com/MohawkRaphaelT/terminal-games/blob/main/MohawkTerminalGame/MohawkTerminalGame/Static%20Classes/Terminal.cs) is meant to be a full replacement of Console with a number of bells and whistles. Specifically, it can properly handle text wrapping, simple overloads for writing text with colors, and having cinema-esque computer typing rather than direct words dumps via Console.Write/WriteLine.
 
-There is a TerminalGrid and TerminalGridWithColor classes that are meant to help set up maps/levels in a terminal game. The [Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/main/DungeonCrawlerSample) showcases this, and how to be performant given the limitations. While not shown, the grid comes with functions to draw rectangles and circles of characters to the grid which might be handy.
+TerminalGrid and TerminalGridWithColor classes are meant to help set up maps/levels in a terminal game. The [Dungeon Crawler sample](https://github.com/MohawkRaphaelT/terminal-games/tree/main/DungeonCrawlerSample) showcases this, and how to be performant given the limitations. While not shown, the grid comes with functions to draw rectangles and circles of characters to the grid which might be handy.
 
 ### Exiting
 
